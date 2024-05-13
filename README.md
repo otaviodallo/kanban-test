@@ -1,40 +1,86 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Kanban de tarefas - Ticket King
 
-## Getting Started
+## Descrição
 
-First, run the development server:
+Neste projeto você deve criar um webapp de controle de tarefas usando Next.js:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-   Next.js: https://nextjs.org/
+-   SASS modules: https://sass-lang.com/documentation/modules
+-   Typescript: https://www.typescriptlang.org/
+-   Prisma: https://www.prisma.io/
+-   SQLite: https://www.prisma.io/docs/orm/overview/databases/sqlite
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Recomendamos que você use o [Yarn](https://yarnpkg.com/) para instalar as dependências e rodar o projeto.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Design
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Você deve seguir o design criado por
+Kemdirim Akujuobi [Dribbble do projeto](https://dribbble.com/shots/17095376-Kanban-board)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Tela principal
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+![App de tarefas](./assets/app.png 'App de tarefas')
 
-## Learn More
+### Modal de adicionar uma lista
 
-To learn more about Next.js, take a look at the following resources:
+O campo de create subtask adiciona uma tarefa a lista.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Obs.: Nesta tela você pode ignorar o campo "Move to another list", ele não é necessário.
+![Modal de lista](./assets/modal.png 'Modal adicionar uma lista')
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Requisitos
 
-## Deploy on Vercel
+O usuário deve ser capaz de:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-   Adicionar uma lista
+    -   A descrição é opcional e deve aparecer logo abaixo do título da lista (no design não tem descrição mas você deve adicionar com uma fonte menor no cabeçalho do card da lista)
+-   Adicionar uma tarefa a uma lista
+-   Marcar uma tarefa como concluída
+-   Excluir uma tarefa
+-   Excluir uma lista
+-   Editar o nome de uma lista (clicando no nome da lista)
+-   Editar o nome de uma tarefa (clicando no nome da tarefa)
+-   Adicionar uma data limite para a tarefa ser concluída
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+EXTRA:
+
+-   Buscar tarefas
+-   Arrastar e soltar tarefas entre listas
+-   Arrastar e soltar tarefas para reordenar
+-   Arrastar e soltar listas para reordenar
+
+## Banco de dados
+
+Use o Prisma para criar um banco de dados SQLite com as seguintes tabelas, caso ache necessário, você pode adicionar mais campos e tabelas:
+
+### List
+
+-   id: String (cuid)
+-   title: String
+-   description: String?
+-   tasks: Task[]
+-   createdAt: DateTime
+-   updatedAt: DateTime
+
+### Task
+
+-   id: String (cuid)
+-   title: String
+-   completedAt: DateTime
+-   finishUntil: DateTime?
+-   listId: String
+-   list: List
+-   createdAt: DateTime
+-   updatedAt: DateTime
+
+## Desafios
+
+-   Adicionar autenticação com [Auth.js](https://authjs.dev/)
+-   Adicionar um sistema de notificações para tarefas com data limite
+-   Adicionar [microinterações](https://www.thedevelobear.com/post/microinteractions/) para conclusão de uma lista, use o [react-rewards](https://www.npmjs.com/package/react-rewards) por exemplo.
+-   Adicionar um sistema de compartilhamento de listas
+-   Adicionar um sistema de notificações para compartilhamento de listas
+
+## Entrega
+
+Você deve clonar este repositório no Github e nos enviar o link do seu repositório.
