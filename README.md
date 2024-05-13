@@ -30,6 +30,8 @@ Obs.: Nesta tela você pode ignorar o campo "Move to another list", ele não é 
 
 ## Requisitos
 
+Na implementação das rotas de API você deve usar o [zod](https://zod.dev/) para validar os dados recebidos
+
 O usuário deve ser capaz de:
 
 -   Adicionar uma lista
