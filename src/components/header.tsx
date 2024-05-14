@@ -1,7 +1,8 @@
-import raio from '../../public/raio.png'
-import sino from '../../public/packard-bell.png'
+import raio from '../../public/raio.png';
+import sino from '../../public/packard-bell.png';
+import lupa from '../../public/lupa.png'
 import Image from 'next/image';
-import styles from '../styles/header.module.scss'
+import styles from '../styles/header.module.scss';
 
 export default function Header() {
     return (
@@ -11,7 +12,7 @@ export default function Header() {
                     <div className={styles.headerLeft}>
                         <Image
                             src={raio}
-                            alt='raio'
+                            alt="raio"
                             className={styles.headerImgRaio}
                         />
                         <p>Taskanban</p>
@@ -19,16 +20,22 @@ export default function Header() {
                     <div className={styles.headerCenter}>
                         <Image
                             src={sino}
-                            alt='sino'
+                            alt="sino"
                             className={styles.headerImgSino}
                         />
-                        <input type="text" id="username" name="username" />
+                        <div className={styles.headerCenterInput}>
+                            <input type="text" id="username" name="username" placeholder='Search Board' />  
+                            <Image 
+                                src={lupa}
+                                alt="lupa"
+                            />
+                        </div>
                     </div>
-                    <div>
+                    <div className={styles.headerRight}>
                         <button>New List +</button>
                     </div>
                 </div>
             </header>
         </>
-    )
+    );
 }

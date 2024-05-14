@@ -1,0 +1,109 @@
+
+.main {
+    background-color: #333538;
+    width: 360px;
+    border-radius: 25px;
+    font-size: 15px;
+}
+
+.tasks {
+    height: 100%;
+}
+
+.task {
+    align-items: start;
+}
+
+.taskMain {
+    align-items: start;
+}
+
+.taskContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+.taskContent div {
+    margin-top: 10px;
+}
+
+.taskTitle {
+    margin-bottom: -8px;
+}
+
+.taskDescription {
+    align-items: start;
+    font-size: 12px;
+}
+
+.tasks div {
+    height: 60px;
+    padding-left: 10px;
+    display: flex;
+}
+
+.tasks div:hover {
+    background-color: #47484d;
+}
+
+.checkbox {
+    width: 17px;
+    height: 17px;
+    border-radius: 10px;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    align-items: center;
+    border-bottom: 1px solid rgb(45, 46, 46);
+    border-radius: 17px 17px 0 0;
+    font-size: 20px;
+}
+
+.titlePoints {
+    cursor: pointer;
+    font-size: 25px;
+    margin-top: -10px;
+}
+
+.newTasks {
+    height: 65px;
+    display: flex;
+    border-top: 1px solid #47484d;
+}
+
+.newTasks input {
+    width: 100%;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background-color: #333538;
+}
+
+.newTasks input::placeholder {
+    padding-left: 15px;
+}
+
+.newTasks img {
+    margin-left: -35px;
+    margin-top: 25px;
+    cursor: pointer;
+}
+
+.taskCheck {
+    max-height: 15px;
+    width: 20px;
+    background-color: #2d2e31;
+    align-items: center;
+    border-radius: 5px;
+    margin-top: 23px;
+    border: 1px solid black;
+}
+
+.taskCheck img {
+    width: 10px;
+    height: 8px;
+    margin-left: -4.7px;
+}

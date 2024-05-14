@@ -1,14 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 .header {
+    margin: 0 auto;
+    padding: 15px;
     width: 100%;
+    border-bottom: 1px solid #151616;
 }
 
 .main {
-    background-color: #2F4F4F;
     display: flex;
-    margin: 0 auto;
+    justify-content: space-between;
     align-items: center;
+    padding: 10px;
 }
 
 .headerImgRaio {
@@ -23,7 +26,6 @@
 }
 
 .headerLeft p {
-    font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-style: normal;
     color: white;
@@ -33,16 +35,42 @@
 .headerCenter {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 35px;
+}
+
+.headerCenter input {
+    width: 300px;
+    height: 35px;
+    border-radius: 10px;
+    background-color: #151616;
+    color: white;
+    padding: 10px;
 }
 
 .headerImgSino {
-    width: 20px;
+    width: 19px;
     height: 20px;
+    cursor: pointer;
 }
 
-.headerRight {
-    display: flex;
+.headerRight button {
+    width: 120px;
+    height: 35px;
+    border-radius: 10px;
+    background-color: #8A2BE2;
+    color: white;
+    font-size: 15px;
+}
+
+.headerCenterInput {
     align-items: center;
-    gap: 5px;
+    display: flex;
+    margin-left: -15px;
+}
+
+.headerCenterInput img {
+    width: 23px;
+    height: 20px;
+    margin-left: -38px;
+    cursor: pointer;
 }
