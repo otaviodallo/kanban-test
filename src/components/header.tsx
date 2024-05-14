@@ -1,6 +1,6 @@
 import raio from '../../public/raio.png';
 import sino from '../../public/packard-bell.png';
-import lupa from '../../public/lupa.png'
+import lupa from '../../public/lupa.png';
 import Image from 'next/image';
 import styles from '../styles/header.module.scss';
 
@@ -24,11 +24,13 @@ export default function Header() {
                             className={styles.headerImgSino}
                         />
                         <div className={styles.headerCenterInput}>
-                            <input type="text" id="username" name="username" placeholder='Search Board' />  
-                            <Image 
-                                src={lupa}
-                                alt="lupa"
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Search Board"
                             />
+                            <Image src={lupa} alt="lupa" />
                         </div>
                     </div>
                     <div className={styles.headerRight}>

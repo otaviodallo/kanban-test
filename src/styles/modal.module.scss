@@ -1,0 +1,122 @@
+.main {
+    background-color: #1d1e1f;
+    width: 650px;
+    height: 360px;
+    border-radius: 15px;
+    margin: 0 auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.contentInput1 {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;   
+    padding: 15px;
+    border-bottom: 1px solid #292a2c;
+}
+
+.input input {
+    height: 50px;
+    width: 100%;
+    background-color: #1d1e1f;
+}
+
+.input {
+    width: 60%;
+}
+
+.inputSave {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.inputSave button {
+    width: 100px;
+    height: 35px;
+    border-radius: 10px;
+    background-color: #8a2be2;
+    color: white;
+    font-size: 15px;
+}
+
+.inputSave input {
+    width: 100px;
+    height: 35px;
+    border-radius: 10px;
+    background-color: #8a2be2;
+    color: white;
+    font-size: 15px;
+}
+
+.inputSaveCaracter{
+    font-size: 12px;
+}
+
+.contentInput2 {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;   
+    padding: 15px;
+    border-bottom: 1px solid #292a2c;
+}
+
+.contentInput3 {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;   
+    padding: 15px;
+    border-bottom: 1px solid #292a2c;
+}
+
+.contentInput3 button {
+    width: 170px;
+    background-color: #292a2c;
+}
+
+.contentInput3 img {
+    margin-left: -30px;
+    margin-bottom: -7px;
+}
+
+.contentInput4 {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;   
+    padding: 15px;
+    border-bottom: 1px solid #292a2c;
+}
+
+.contentInput4 button {
+    width: 170px;
+}
+
+.contentInput5 {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;   
+    padding: 15px;
+}
+
+.contentInput5 button {
+    width: 50px;
+}
+
+.text {
+    margin-top: 8px;
+}
