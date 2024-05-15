@@ -20,9 +20,6 @@ export default function Home() {
                     <SideBar />
                     <div className="main-lists">
                         <List onAddTask={openModal}/>
-                        <List onAddTask={openModal}/>
-                        <List onAddTask={openModal}/>
-                        <List onAddTask={openModal}/>
                     </div>
                 </div>
             </div>

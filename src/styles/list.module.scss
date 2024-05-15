@@ -1,12 +1,8 @@
 .main {
-    background-color: #333538;
+    background-color: #2a2a2b;
     width: 360px;
     border-radius: 25px;
     font-size: 15px;
-}
-
-.tasks {
-    height: 100%;
 }
 
 .task {
@@ -72,14 +68,15 @@
 .newTasks {
     height: 65px;
     display: flex;
-    border-bottom: 1px solid rgb(45, 46, 46);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 .newTasks input {
     width: 100%;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
-    background-color: #333538;
+    background-color: #2a2a2b;
 }
 
 .newTasks input::placeholder {
@@ -106,4 +103,24 @@
     width: 10px;
     height: 8px;
     margin-left: -4.7px;
+}
+
+.completedList{
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 20px;
+    align-items: center;
+    background-color: #2a2a2b;
+}
+
+.tasksDone {
+    background-color: red;
+}
+
+.completedText {
+    background-color: #8a2be2;
+    height: 40px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 10px;
 }
