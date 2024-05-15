@@ -1,6 +1,6 @@
 import Header from '@/components/header';
 import List from '@/components/list';
-import ModalAddTask from '@/components/modal';
+import ModalAddTask from '@/components/modalTask';
 import SideBar from '@/components/sidebar';
 import { useState } from 'react';
 
@@ -19,7 +19,7 @@ export default function Home() {
                 <div className="main-content">
                     <SideBar />
                     <div className="main-lists">
-                        <List onAddTask={openModal}/>
+                        <List onAddTask={openModal} />
                     </div>
                 </div>
             </div>
