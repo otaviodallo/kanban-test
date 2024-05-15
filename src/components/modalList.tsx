@@ -1,9 +1,85 @@
-import styles from '../styles/modalList.module.scss'
+import { useState } from 'react';
+import styles from '../../src/styles/modal.module.scss';
 
-export default function ModalList () {
+interface ModalAddListProps {
+    closeModal: () => void;
+}
+
+export default function ModalList({ closeModal }: ModalAddListProps) {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [formValues, setFormValues] = useState({
+        title: "",
+        description: "",
+    });
+    
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        
+        const formData = new FormData(e.currentTarget);
+        const title = formData.get('title') as string;
+        const description = formData.get('description') as string;
+
+        try {
+            const res = await fetch("/api/list", {
+                method: "POST",
+                body: JSON.stringify({ title, description }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            setLoading(false);
+            if (!res.ok) {
+                setError((await res.json()).message);
+                return;
+            }
+        } catch (error: any) {
+            setLoading(false);
+            setError(error);
+        }
+
+        closeModal()
+    };
+    
     return (
         <>
-
+            <div className={styles.main}>
+                <div className={styles.content}>
+                    <form onSubmit={onSubmit}>
+                        <div className={styles.contentInput1}>
+                            <div className={styles.input}>
+                                <input
+                                    placeholder="Enter the list title here"
+                                    name="title"
+                                    value={formValues.title}
+                                    onChange={(e) => setFormValues({ ...formValues, title: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <div className={styles.inputSave}>
+                                    <div className={styles.inputSaveCaracter}>
+                                        0/50
+                                    </div>
+                                    <div>
+                                        <button type="submit">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.contentInput2}>
+                            <div className={styles.input}>
+                                <input
+                                    placeholder="Add a short description"
+                                    name="description"
+                                    value={formValues.description}
+                                    onChange={(e) => setFormValues({ ...formValues, description: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </>
-    )
+    );
 }

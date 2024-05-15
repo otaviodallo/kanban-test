@@ -4,7 +4,7 @@ import lupa from '../../public/lupa.png';
 import Image from 'next/image';
 import styles from '../styles/header.module.scss';
 
-export default function Header() {
+export default function Header({ onAddList }) {
     return (
         <>
             <header className={styles.header}>
@@ -34,7 +34,7 @@ export default function Header() {
                         </div>
                     </div>
                     <div className={styles.headerRight}>
-                        <button>New List +</button>
+                        <button onClick={onAddList}>New List +</button>
                     </div>
                 </div>
             </header>

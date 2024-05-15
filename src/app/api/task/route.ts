@@ -10,6 +10,7 @@ export async function POST(
             description: string;
             listId: number
         };
+        console.log(title, description)
         const task = await db.task.create({
             data: {
                 title,
@@ -83,10 +84,18 @@ export async function PUT(
     }
 }
 
-export async function GET() {
+export async function GET(req: any) {
     try {
-        const tasks = await db.task.findMany({});
-        
+        const urlParams = new URLSearchParams(req.url.split('?')[1]);
+        const id = urlParams.get('listId');
+        if (!id) {
+            throw new Error('ID não fornecido na rota.');
+        }
+        const parsedId = parseInt(id);
+        const tasks = await db.task.findMany({
+            where: { listId: parsedId }
+        });
+
         return NextResponse.json(tasks);
     } catch (e: any) {
         return new NextResponse(

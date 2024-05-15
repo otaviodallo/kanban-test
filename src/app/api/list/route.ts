@@ -69,7 +69,11 @@ export async function PUT(req: Request) {
 
 export async function GET() {
     try {
-        const lists = await db.list.findMany({});
+        const lists = await db.list.findMany({
+            include: {
+                tasks: true
+            }
+        });
         return NextResponse.json(lists);
     } catch (e: any) {
         return new NextResponse(
@@ -81,3 +85,16 @@ export async function GET() {
         );
     }
 }
+
+// export async function DELETE(req: any) {
+//     try {
+//         const urlParams = new URLSearchParams(req.url.split('?')[1]);
+//         const id = urlParams.get('listId');
+//         const parsedId = parseInt(id);
+//         const list = await db.list.delete({
+//             where: {
+//                 id: id
+//             }
+//         })
+//     }
+// }
