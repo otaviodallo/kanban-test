@@ -15,7 +15,8 @@ export default function ModalAddTask({ closeModal, listId }: ModalAddTaskProps) 
     const [formValues, setFormValues] = useState({
         title: "",
         description: "",
-        listId: ""
+        listId: "",
+        finishUntil: ""
     });
 
     const handleClose = () => {
@@ -33,15 +34,18 @@ export default function ModalAddTask({ closeModal, listId }: ModalAddTaskProps) 
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
         const listId = parseInt(formData.get('listId') as string)
+        const date = formData.get('finishUntil') as string
+        const finishUntil = new Date(date)
 
         try {
             const res = await fetch("/api/task", {
                 method: "POST",
-                body: JSON.stringify({ title, description, listId }),
+                body: JSON.stringify({ title, description, listId, finishUntil }),
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
+            console.log(res.body)
             setLoading(false);
             if (!res.ok) {
                 setError((await res.json()).message);
@@ -124,8 +128,8 @@ export default function ModalAddTask({ closeModal, listId }: ModalAddTaskProps) 
                                 <div>Data limite:</div>
                                 <input
                                     type="datetime-local"
-                                    id="deadline"
-                                    name="deadline"
+                                    id="finishUntil"
+                                    name="finishUntil"
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         setDeadline(value ? new Date(value) : null);

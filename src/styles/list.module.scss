@@ -77,13 +77,17 @@
 
 .newTasks input {
     width: 100%;
+    border: none; /* Remove borda padrão */
+    outline: none; /* Remove outline ao focar */
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
-    background-color: #2a2a2b;
+    background-color: #2a2a2b; /* Mesma cor de fundo que a lista */
+    color: white; /* Cor do texto para ficar visível */
+    padding-left: 15px; /* Mantém o preenchimento interno */
 }
 
 .newTasks input::placeholder {
-    padding-left: 15px;
+    color: white; /* Cor do placeholder para combinar com o texto */
 }
 
 .newTasks img {
@@ -108,7 +112,7 @@
     margin-left: -4.7px;
 }
 
-.completedList{
+.completedList {
     border-radius: 10px;
     width: 100%;
     margin-top: 20px;
@@ -132,4 +136,8 @@
     margin-right: 20px;
     margin-top: 15px;
     max-height: 10px;
+}
+
+.taskDelete div {
+    font-size: 10px;
 }

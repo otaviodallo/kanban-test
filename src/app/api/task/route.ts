@@ -5,24 +5,27 @@ export async function POST(
     req: Request
 ) {
     try {
-        const { title, description, listId } = (await req.json()) as {
+        const { title, description, listId, finishUntil } = (await req.json()) as {
             title: string;
             description: string;
-            listId: number
+            listId: number,
+            finishUntil: Date
         };
-        console.log(title, description)
+        console.log(title, description, finishUntil)
         const task = await db.task.create({
             data: {
                 title,
                 description,
-                listId
+                listId,
+                finishUntil
             }
         })
         return NextResponse.json({
             task: {
                 name: task.title,
                 email: task.description,
-                listId: task.listId
+                listId: task.listId,
+                finishUntil: task.finishUntil
             },
         });
     } catch (e: any) {
@@ -40,19 +43,21 @@ export async function PUT(
     req: Request
 ) {
     try {
-        const { id, title, description, listId } = (await req.json()) as {
+        const { id, title, description, listId, finishUntil } = (await req.json()) as {
             id: number;
             title: string;
             description: string;
             listId: number;
+            finishUntil: Date
         };
-
+        console.log(title, description, listId, finishUntil)
         const task = await db.task.update({
             where: { id },
             data: {
                 title,
                 description,
-                listId
+                listId,
+                finishUntil
             }
         });
 
@@ -70,7 +75,8 @@ export async function PUT(
             task: {
                 name: task.title,
                 email: task.description,
-                listId: task.listId
+                listId: task.listId,
+                finish: task.finishUntil
             },
         });
     } catch (e: any) {
@@ -95,7 +101,6 @@ export async function GET(req: any) {
         const tasks = await db.task.findMany({
             where: { listId: parsedId }
         });
-
         return NextResponse.json(tasks);
     } catch (e: any) {
         return new NextResponse(
