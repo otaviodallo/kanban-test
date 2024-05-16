@@ -3,6 +3,7 @@
     width: 360px;
     border-radius: 25px;
     font-size: 15px;
+    min-height: 126px;
 }
 
 .task {
@@ -64,8 +65,7 @@
 
 .titlePoints {
     cursor: pointer;
-    font-size: 25px;
-    margin-top: -10px;
+    font-size: 15px;
 }
 
 .newTasks {

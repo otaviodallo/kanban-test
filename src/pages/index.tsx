@@ -12,7 +12,7 @@ export default function Home() {
     const [listId, setListId] = useState("")
     const openModalTask = (listId: any) => {
         setIsModalTaskOpen(true);
-        setTaskId(listId); 
+        setTaskId(listId);
     };
     const closeModalTask = () => {
         setIsModalTaskOpen(false);
@@ -27,7 +27,7 @@ export default function Home() {
     return (
         <>
             <div className="main-html">
-                <Header onAddList={() => openModalList('')}/>
+                <Header onAddList={() => openModalList('')} />
                 <div className="main-content">
                     <SideBar />
                     <div className="main-lists">
@@ -36,8 +36,7 @@ export default function Home() {
                 </div>
             </div>
             {isModalListOpen && <ModalList listId={listId} closeModal={closeModalList} />}
-            {isModalTaskOpen && <ModalAddTask listId={taskId} closeModal={closeModalTask} />
-}
+            {isModalTaskOpen && <ModalAddTask listId={taskId} closeModal={closeModalTask} />}
         </>
     );
 }

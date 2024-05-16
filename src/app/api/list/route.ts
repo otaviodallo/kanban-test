@@ -91,11 +91,12 @@ export async function DELETE(req: any) {
         const { id } = (await req.json()) as {
             id: number;
         };
-        return await db.list.delete({
+        await db.list.delete({
             where: {
                 id: id
             }
         })
+        return id
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({

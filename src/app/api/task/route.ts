@@ -107,3 +107,25 @@ export async function GET(req: any) {
         );
     }
 }
+
+export async function DELETE(req: any) {
+    try {
+        const { id } = (await req.json()) as {
+            id: number;
+        };
+        await db.task.delete({
+            where: {
+                id: id
+            }
+        })
+        console.log(id)
+    } catch (e: any) {
+        return new NextResponse(
+            JSON.stringify({
+                status: "error",
+                message: e.message,
+            }),
+            { status: 500 }
+        );
+    }
+}

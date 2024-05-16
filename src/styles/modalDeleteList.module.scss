@@ -1,0 +1,42 @@
+.modalBackground{
+    z-index: 9999;
+    border-radius: 10px;
+    top: 0;
+    left: 0;
+    position: absolute
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.modalClose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.modalClose:hover {
+    color: #8a2be2;
+}
+
+.modalDeleteOptions {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.modalDeleteOptions button {
+    width: 80px;
+    border: none;
+    background-color: #8a2be2;
+    border-radius: 10px;
+    margin-top: 10px;
+}
