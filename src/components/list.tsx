@@ -36,6 +36,23 @@ export default function List({ onAddTask }) {
         fetchLists();
     }, []);
 
+    async function deleteTask(id: number) {
+        try {
+            const res = await fetch("/api/task", {
+                method: "DELETE",
+                body: JSON.stringify({ id }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if(!res.ok) {
+                throw new Error("Failed to delete task")
+            }
+        } catch(error) {
+            console.error("Failed to delete tasks", error)
+        }
+    }
+
     return (
         <>
             {lists.map((list) => (
@@ -55,6 +72,7 @@ export default function List({ onAddTask }) {
                                             <div className={styles.taskCheck}>
                                                 <Image src={check} alt="check" />
                                             </div>
+                                            
                                             <div className={styles.taskContent}>
                                                 <div className={styles.taskTitle}>
                                                     {task.title}
@@ -63,6 +81,9 @@ export default function List({ onAddTask }) {
                                                     {task.description}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className={styles.taskDelete}>
+                                            <a onClick={() => deleteTask(list.id)}>X</a>
                                         </div>
                                     </div>
                                 ))}
@@ -74,7 +95,7 @@ export default function List({ onAddTask }) {
                                 id="newTask"
                                 name="newTaskInput"
                                 placeholder="add a new task"
-                                onClick={onAddTask}
+                                onClick={() => onAddTask(list.id)}
                             />
                             <Image src={entrar} alt="entrar" />
                         </div>
@@ -85,7 +106,7 @@ export default function List({ onAddTask }) {
                                 <div>Completed List</div>
                             </div>
                             <div className={styles.tasks}>
-                                {}
+                                { }
                             </div>
                         </div>
                     </div>

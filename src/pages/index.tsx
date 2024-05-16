@@ -8,14 +8,18 @@ import { useState } from 'react';
 export default function Home() {
     const [isModalTaskOpen, setIsModalTaskOpen] = useState(false);
     const [isModalListOpen, setIsModalListOpen] = useState(false);
-    const openModalTask = () => {
+    const [taskId, setTaskId] = useState("")
+    const [listId, setListId] = useState("")
+    const openModalTask = (listId: any) => {
         setIsModalTaskOpen(true);
+        setTaskId(listId); 
     };
     const closeModalTask = () => {
         setIsModalTaskOpen(false);
     };
-    const openModalList = () => {
+    const openModalList = (listId: string) => {
         setIsModalListOpen(true);
+        setListId(listId);
     };
     const closeModalList = () => {
         setIsModalListOpen(false);
@@ -23,16 +27,17 @@ export default function Home() {
     return (
         <>
             <div className="main-html">
-                <Header onAddList={openModalList}/>
+                <Header onAddList={() => openModalList('')}/>
                 <div className="main-content">
                     <SideBar />
                     <div className="main-lists">
-                        <List onAddTask={openModalTask} />
+                        <List onAddTask={(listId: any) => openModalTask(listId)} />
                     </div>
                 </div>
             </div>
-            {isModalTaskOpen && <ModalAddTask closeModal={closeModalTask} />}
-            {isModalListOpen && <ModalList closeModal={closeModalList} />}
+            {isModalListOpen && <ModalList listId={listId} closeModal={closeModalList} />}
+            {isModalTaskOpen && <ModalAddTask listId={taskId} closeModal={closeModalTask} />
+}
         </>
     );
 }

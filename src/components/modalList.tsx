@@ -3,20 +3,25 @@ import styles from '../../src/styles/modal.module.scss';
 
 interface ModalAddListProps {
     closeModal: () => void;
+    listId: string
 }
 
-export default function ModalList({ closeModal }: ModalAddListProps) {
+export default function ModalList({ closeModal, listId }: ModalAddListProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [formValues, setFormValues] = useState({
         title: "",
         description: "",
     });
-    
+
+    const handleClose = () => {
+        closeModal()
+    }
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
-        
+
         const formData = new FormData(e.currentTarget);
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
@@ -41,7 +46,7 @@ export default function ModalList({ closeModal }: ModalAddListProps) {
 
         closeModal()
     };
-    
+
     return (
         <>
             <div className={styles.main}>
@@ -49,6 +54,7 @@ export default function ModalList({ closeModal }: ModalAddListProps) {
                     <form onSubmit={onSubmit}>
                         <div className={styles.contentInput1}>
                             <div className={styles.input}>
+                                <input type="hidden" name="listId" value={listId} />
                                 <input
                                     placeholder="Enter the list title here"
                                     name="title"
@@ -61,8 +67,9 @@ export default function ModalList({ closeModal }: ModalAddListProps) {
                                     <div className={styles.inputSaveCaracter}>
                                         0/50
                                     </div>
-                                    <div>
+                                    <div className={styles.buttonsFinish}>
                                         <button type="submit">Save</button>
+                                        <a onClick={handleClose}>X</a>
                                     </div>
                                 </div>
                             </div>

@@ -4,7 +4,11 @@ import lupa from '../../public/lupa.png';
 import Image from 'next/image';
 import styles from '../styles/header.module.scss';
 
-export default function Header({ onAddList }) {
+interface ModalAddTaskProps {
+    onAddList: () => void;
+}
+
+export default function Header({ onAddList }: ModalAddTaskProps) {
     return (
         <>
             <header className={styles.header}>

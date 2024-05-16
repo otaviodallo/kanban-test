@@ -1,7 +1,7 @@
 .main {
     background-color: #1d1e1f;
     width: 650px;
-    height: 360px;
+    height: 380px;
     border-radius: 15px;
     margin: 0 auto;
     position: fixed;
@@ -119,4 +119,23 @@
 
 .text {
     margin-top: 8px;
+}
+
+.inputDate{
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    margin-top: 15px;
+    justify-content: center;
+    gap: 40px;
+}
+
+.buttonsFinish {
+    display: flex;
+    gap: 20px;
+}
+
+.buttonsFinish a {
+    margin-top: 2.5px;
+    font-size: 20px;
 }
