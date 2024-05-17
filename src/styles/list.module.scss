@@ -136,8 +136,20 @@
     margin-right: 20px;
     margin-top: 15px;
     max-height: 10px;
+    color: inherit;
 }
 
 .taskDelete div {
     font-size: 10px;
+    max-height: 20px;
+    margin-top: 3px;
+    margin-right: 5px;
+}
+
+.overdue {
+    color: red;
+  }
+  
+.dueSoon {
+    color: green;
 }
