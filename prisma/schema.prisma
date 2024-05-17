@@ -22,7 +22,6 @@ model List {
 model Task {
   id          Int       @id @default(autoincrement())
   title       String
-  description String
   completedAt DateTime?
   finishUntil DateTime?
   listId      Int

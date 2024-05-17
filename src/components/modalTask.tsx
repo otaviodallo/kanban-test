@@ -4,12 +4,11 @@ import { z } from "zod";
 
 interface ModalAddTaskProps {
     closeModal: () => void;
-    listId: string
+    listId: string;
     onTaskAdded: () => void;
 }
 
 export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalAddTaskProps) {
-    const [deadline, setDeadline] = useState<Date | null>(null);
     const [showDeadlineInput, setShowDeadlineInput] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -21,8 +20,8 @@ export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalA
     });
 
     const handleClose = () => {
-        closeModal()
-    }
+        closeModal();
+    };
 
     const handleShowDeadlineInput = () => {
         setShowDeadlineInput((prev) => !prev);
@@ -34,19 +33,19 @@ export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalA
         const formData = new FormData(e.currentTarget);
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
-        const listId = parseInt(formData.get('listId') as string)
-        const date = formData.get('finishUntil') as string
-        const finishUntil = new Date(date)
+        const listId = parseInt(formData.get('listId') as string);
+        const finishUntil = formData.get('finishUntil') as string;
 
         try {
+            const date = new Date(finishUntil)
             const res = await fetch("/api/task", {
                 method: "POST",
-                body: JSON.stringify({ title, description, listId, finishUntil }),
+                body: JSON.stringify({ title, listId, finishUntil: date }),
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
-            console.log(res.body)
+            console.log(res.body);
             setLoading(false);
             if (!res.ok) {
                 setError((await res.json()).message);
@@ -57,14 +56,14 @@ export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalA
             setLoading(false);
             setError(error);
         }
-        closeModal()
+        closeModal();
     };
+
     const TaskSchema = z.object({
         title: z.string(),
-        description: z.string(),
         listId: z.number(),
-        deadline: z.date().nullable()
-    });
+        finishUntil: z.string().nullable()
+    })
 
     return (
         <>
@@ -79,6 +78,7 @@ export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalA
                                     name="title"
                                     value={formValues.title}
                                     onChange={(e) => setFormValues({ ...formValues, title: e.target.value })}
+                                    required
                                 />
                             </div>
                             <div>
@@ -100,6 +100,7 @@ export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalA
                                     name="description"
                                     value={formValues.description}
                                     onChange={(e) => setFormValues({ ...formValues, description: e.target.value })}
+                                    required
                                 />
                             </div>
                         </div>
@@ -130,10 +131,7 @@ export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalA
                                     type="datetime-local"
                                     id="finishUntil"
                                     name="finishUntil"
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        setDeadline(value ? new Date(value) : null);
-                                    }}
+                                    onChange={(e) => setFormValues({ ...formValues, finishUntil: e.target.value })}
                                 />
                             </div>
                         )}

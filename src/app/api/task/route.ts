@@ -5,17 +5,14 @@ export async function POST(
     req: Request
 ) {
     try {
-        const { title, description, listId, finishUntil } = (await req.json()) as {
+        const { title, listId, finishUntil } = (await req.json()) as {
             title: string;
-            description: string;
             listId: number,
             finishUntil: Date
         };
-        console.log(title, description, finishUntil)
         const task = await db.task.create({
             data: {
                 title,
-                description,
                 listId,
                 finishUntil
             }
@@ -23,7 +20,6 @@ export async function POST(
         return NextResponse.json({
             task: {
                 name: task.title,
-                email: task.description,
                 listId: task.listId,
                 finishUntil: task.finishUntil
             },
@@ -50,12 +46,10 @@ export async function PUT(
             listId: number;
             finishUntil: Date
         };
-        console.log(title, description, listId, finishUntil)
         const task = await db.task.update({
             where: { id },
             data: {
                 title,
-                description,
                 listId,
                 finishUntil
             }
@@ -74,7 +68,6 @@ export async function PUT(
         return NextResponse.json({
             task: {
                 name: task.title,
-                email: task.description,
                 listId: task.listId,
                 finish: task.finishUntil
             },
@@ -118,12 +111,12 @@ export async function DELETE(req: any) {
         const { id } = (await req.json()) as {
             id: number;
         };
-        await db.task.delete({
+        const task = await db.task.delete({
             where: {
                 id: id
             }
         })
-        console.log(id)
+        return NextResponse.json(task)
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({

@@ -66,7 +66,15 @@
 
 .titlePoints {
     cursor: pointer;
-    font-size: 15px;
+    background-color: rgb(170, 1, 1);
+    border-radius: 10px;
+    width: 55px;
+    text-align: center;
+}
+
+.titlePoints a {
+    font-size: 13px;
+    align-items: center;
 }
 
 .newTasks {
@@ -78,17 +86,17 @@
 
 .newTasks input {
     width: 100%;
-    border: none; /* Remove borda padrão */
-    outline: none; /* Remove outline ao focar */
+    border: none;
+    outline: none;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
-    background-color: #2a2a2b; /* Mesma cor de fundo que a lista */
-    color: white; /* Cor do texto para ficar visível */
-    padding-left: 15px; /* Mantém o preenchimento interno */
+    background-color: #2a2a2b;
+    color: white;
+    padding-left: 15px;
 }
 
 .newTasks input::placeholder {
-    color: white; /* Cor do placeholder para combinar com o texto */
+    color: white;
 }
 
 .newTasks img {
@@ -131,14 +139,33 @@
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.completedText img { 
+    width: 22px;
+    height: 20px;
+    margin-top: 2px;
+}
+
+.tasksCompletedContent {
+    min-height: 130px;
+    text-align: center;
+    margin-top: 50px;
 }
 
 .taskDelete {
     margin-right: 20px;
     margin-top: 15px;
     max-height: 10px;
-<<<<<<< Updated upstream
     color: inherit;
+}
+
+.taskDelete p {
+    font-size: 11px;
+    margin-right: 7px;
+    margin-top: 3px;
 }
 
 .taskDelete div {
@@ -154,10 +181,8 @@
   
 .dueSoon {
     color: green;
-=======
 }
 
-.description {
+.listDescription {
     font-size: 11px;
->>>>>>> Stashed changes
 }
