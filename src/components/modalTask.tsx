@@ -5,9 +5,10 @@ import { z } from "zod";
 interface ModalAddTaskProps {
     closeModal: () => void;
     listId: string
+    onTaskAdded: () => void;
 }
 
-export default function ModalAddTask({ closeModal, listId }: ModalAddTaskProps) {
+export default function ModalAddTask({ closeModal, listId, onTaskAdded }: ModalAddTaskProps) {
     const [deadline, setDeadline] = useState<Date | null>(null);
     const [showDeadlineInput, setShowDeadlineInput] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -51,14 +52,13 @@ export default function ModalAddTask({ closeModal, listId }: ModalAddTaskProps) 
                 setError((await res.json()).message);
                 return;
             }
+            onTaskAdded();
         } catch (error: any) {
             setLoading(false);
             setError(error);
         }
-
         closeModal()
     };
-
     const TaskSchema = z.object({
         title: z.string(),
         description: z.string(),

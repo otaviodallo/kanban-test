@@ -4,9 +4,10 @@ import styles from '../../src/styles/modal.module.scss';
 interface ModalAddListProps {
     closeModal: () => void;
     listId: string
+    onListAdded: () => void;
 }
 
-export default function ModalList({ closeModal, listId }: ModalAddListProps) {
+export default function ModalList({ closeModal, listId, onListAdded }: ModalAddListProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [formValues, setFormValues] = useState({
@@ -39,11 +40,11 @@ export default function ModalList({ closeModal, listId }: ModalAddListProps) {
                 setError((await res.json()).message);
                 return;
             }
+            onListAdded()
         } catch (error: any) {
             setLoading(false);
             setError(error);
         }
-
         closeModal()
     };
 
