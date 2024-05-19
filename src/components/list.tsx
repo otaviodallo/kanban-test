@@ -53,6 +53,11 @@ export default function List({
         [key: number]: boolean;
     }>({});
 
+    const [editingTask, setEditingTask] = useState<{ [key: number]: boolean }>({});
+    const [editingList, setEditingList] = useState<{ [key: number]: boolean }>({});
+    const [temporaryTaskTitle, setTemporaryTaskTitle] = useState<{ [key: number]: string }>({});
+    const [temporaryListTitle, setTemporaryListTitle] = useState<{ [key: number]: string }>({});
+
     async function fetchLists() {
         try {
             const res = await fetch('/api/list');
@@ -61,6 +66,15 @@ export default function List({
             }
             const data = await res.json();
             setLists(data);
+
+            const completedTasks: CompletedTaskState = {};
+            data.forEach((list: List) => {
+                const completedTasksInList = list.tasks.filter(
+                    (task: Task) => task.completedAt
+                );
+                completedTasks[list.id] = completedTasksInList;
+            });
+            setCompletedTasksByList(completedTasks);
         } catch (error) {
             console.error('Failed to fetch lists', error);
         }
@@ -267,6 +281,44 @@ export default function List({
         }
     };
 
+    const handleEditTask = (taskId: number, title: string) => {
+        setEditingTask((prev) => ({ ...prev, [taskId]: true }));
+        setTemporaryTaskTitle((prev) => ({ ...prev, [taskId]: title }));
+    };
+
+    const handleEditList = (listId: number, title: string) => {
+        setEditingList((prev) => ({ ...prev, [listId]: true }));
+        setTemporaryListTitle((prev) => ({ ...prev, [listId]: title }));
+    };
+
+    const handleSaveTaskTitle = async (task: Task) => {
+        try {
+            const updatedTask = { ...task, title: temporaryTaskTitle[task.id] };
+            await updateTask(updatedTask);
+            setEditingTask((prev) => ({ ...prev, [task.id]: false }));
+        } catch (error) {
+            console.error('Failed to save task title', error);
+        }
+    };
+
+    const handleSaveListTitle = async (list: List) => {
+        try {
+            const updatedList = { ...list, title: temporaryListTitle[list.id] };
+            await updateList(updatedList);
+            setEditingList((prev) => ({ ...prev, [list.id]: false }));
+        } catch (error) {
+            console.error('Failed to save list title', error);
+        }
+    };
+
+    const handleTaskTitleChange = (taskId: number, title: string) => {
+        setTemporaryTaskTitle((prev) => ({ ...prev, [taskId]: title }));
+    };
+
+    const handleListTitleChange = (listId: number, title: string) => {
+        setTemporaryListTitle((prev) => ({ ...prev, [listId]: title }));
+    };
+
     return (
         <>
             {lists.map((list) => (
@@ -274,7 +326,21 @@ export default function List({
                     <div className={styles.main}>
                         <div className={styles.title}>
                             <div>
-                                <div>{list.title}</div>
+                                {editingList[list.id] ? (
+                                    <input
+                                        type="text"
+                                        value={temporaryListTitle[list.id]}
+                                        onChange={(e) =>
+                                            handleListTitleChange(list.id, e.target.value)
+                                        }
+                                        onBlur={() => handleSaveListTitle(list)}
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <div onClick={() => handleEditList(list.id, list.title)}>
+                                        <div>{list.title}</div>
+                                    </div>
+                                )}
                                 <div className={styles.listDescription}>
                                     {list.description}
                                 </div>
@@ -315,13 +381,40 @@ export default function List({
                                                         styles.taskContent
                                                     }
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.taskTitle
-                                                        }
-                                                    >
-                                                        {task.title}
-                                                    </div>
+                                                    {editingTask[task.id] ? (
+                                                        <input
+                                                            type="text"
+                                                            value={
+                                                                temporaryTaskTitle[task.id]
+                                                            }
+                                                            onChange={(e) =>
+                                                                handleTaskTitleChange(
+                                                                    task.id,
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                            onBlur={() =>
+                                                                handleSaveTaskTitle(
+                                                                    task
+                                                                )
+                                                            }
+                                                            autoFocus
+                                                        />
+                                                    ) : (
+                                                        <div
+                                                            onClick={() =>
+                                                                handleEditTask(
+                                                                    task.id,
+                                                                    task.title
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.taskTitle
+                                                            }
+                                                        >
+                                                            {task.title}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div className={styles.taskDelete}>
