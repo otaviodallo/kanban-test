@@ -3,21 +3,25 @@ import styles from '../../src/styles/modal.module.scss';
 
 interface ModalAddListProps {
     closeModal: () => void;
-    listId: string
+    listId: string;
     onListAdded: () => void;
 }
 
-export default function ModalList({ closeModal, listId, onListAdded }: ModalAddListProps) {
+export default function ModalList({
+    closeModal,
+    listId,
+    onListAdded,
+}: ModalAddListProps) {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState('');
     const [formValues, setFormValues] = useState({
-        title: "",
-        description: "",
+        title: '',
+        description: '',
     });
 
     const handleClose = () => {
-        closeModal()
-    }
+        closeModal();
+    };
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -28,11 +32,11 @@ export default function ModalList({ closeModal, listId, onListAdded }: ModalAddL
         const description = formData.get('description') as string;
 
         try {
-            const res = await fetch("/api/list", {
-                method: "POST",
+            const res = await fetch('/api/list', {
+                method: 'POST',
                 body: JSON.stringify({ title, description }),
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
             });
             setLoading(false);
@@ -40,12 +44,12 @@ export default function ModalList({ closeModal, listId, onListAdded }: ModalAddL
                 setError((await res.json()).message);
                 return;
             }
-            onListAdded()
+            onListAdded();
         } catch (error: any) {
             setLoading(false);
             setError(error);
         }
-        closeModal()
+        closeModal();
     };
 
     return (
@@ -55,19 +59,25 @@ export default function ModalList({ closeModal, listId, onListAdded }: ModalAddL
                     <form onSubmit={onSubmit}>
                         <div className={styles.contentInput1}>
                             <div className={styles.input}>
-                                <input type="hidden" name="listId" value={listId} />
+                                <input
+                                    type="hidden"
+                                    name="listId"
+                                    value={listId}
+                                />
                                 <input
                                     placeholder="Enter the list title here"
                                     name="title"
                                     value={formValues.title}
-                                    onChange={(e) => setFormValues({ ...formValues, title: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormValues({
+                                            ...formValues,
+                                            title: e.target.value,
+                                        })
+                                    }
                                 />
                             </div>
                             <div>
                                 <div className={styles.inputSave}>
-                                    <div className={styles.inputSaveCaracter}>
-                                        0/50
-                                    </div>
                                     <div className={styles.buttonsFinish}>
                                         <button type="submit">Save</button>
                                         <a onClick={handleClose}>X</a>
@@ -81,7 +91,12 @@ export default function ModalList({ closeModal, listId, onListAdded }: ModalAddL
                                     placeholder="Add a short description"
                                     name="description"
                                     value={formValues.description}
-                                    onChange={(e) => setFormValues({ ...formValues, description: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormValues({
+                                            ...formValues,
+                                            description: e.target.value,
+                                        })
+                                    }
                                 />
                             </div>
                         </div>

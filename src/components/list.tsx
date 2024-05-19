@@ -167,12 +167,11 @@ export default function List({
 
     const toggleCompletedTasks = (id: number) => {
         setOpenCompletedTasks((prevState) => {
-            // Verifique se a lista de tarefas completadas para este ID está aberta ou fechada
             const isOpen = prevState[id] ?? false;
 
             return {
                 ...prevState,
-                [id]: !isOpen, // Inverte o estado, independentemente de estar aberto ou fechado
+                [id]: !isOpen,
             };
         });
     };
@@ -359,7 +358,7 @@ export default function List({
                         <div className={styles.completedList}>
                             <div className={styles.completedText}>
                                 <div>Completed List</div>
-                                <div>
+                                <div className={styles.allTasksCompleted}>
                                     <a
                                         onClick={() =>
                                             toggleCompletedTasks(list.id)
