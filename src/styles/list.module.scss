@@ -27,6 +27,12 @@
     margin-top: 10px;
 }
 
+.taskContent input {
+    margin-top: 23px;
+    background-color: #47484d;
+    border: none;
+}
+
 .taskTitle {
     margin-bottom: 6px;
     font-size: 14px;
@@ -175,6 +181,10 @@
     min-height: 20px;
     margin-top: 3px;
     margin-right: 5px;
+}
+
+.taskDelete input {
+    min-height: 20px;
 }
 
 .overdue {

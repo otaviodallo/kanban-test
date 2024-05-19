@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { z } from 'zod';
 import styles from '../../src/styles/modal.module.scss';
 
 interface ModalAddListProps {
@@ -6,6 +7,11 @@ interface ModalAddListProps {
     listId: string;
     onListAdded: () => void;
 }
+
+const ListSchema = z.object({
+    title: z.string().min(1, "Title is required").max(50, "Title cannot exceed 50 characters"),
+    description: z.string().optional()
+});
 
 export default function ModalList({
     closeModal,
@@ -26,15 +32,23 @@ export default function ModalList({
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
+        setError(""); 
+        const formData = {
+            title: formValues.title,
+            description: formValues.description,
+        };
 
-        const formData = new FormData(e.currentTarget);
-        const title = formData.get('title') as string;
-        const description = formData.get('description') as string;
+        const result = ListSchema.safeParse(formData);
+        if (!result.success) {
+            setLoading(false);
+            setError(result.error.errors.map(err => err.message).join(", "));
+            return;
+        }
 
         try {
             const res = await fetch('/api/list', {
                 method: 'POST',
-                body: JSON.stringify({ title, description }),
+                body: JSON.stringify(result.data),
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -45,11 +59,11 @@ export default function ModalList({
                 return;
             }
             onListAdded();
+            closeModal();
         } catch (error: any) {
             setLoading(false);
-            setError(error);
+            setError(error.message);
         }
-        closeModal();
     };
 
     return (
@@ -74,12 +88,13 @@ export default function ModalList({
                                             title: e.target.value,
                                         })
                                     }
+                                    required
                                 />
                             </div>
                             <div>
                                 <div className={styles.inputSave}>
                                     <div className={styles.buttonsFinish}>
-                                        <button type="submit">Save</button>
+                                        <button type="submit" disabled={loading}>Save</button>
                                         <a onClick={handleClose}>X</a>
                                     </div>
                                 </div>
@@ -100,6 +115,7 @@ export default function ModalList({
                                 />
                             </div>
                         </div>
+                        {error && <div className={styles.error}>{error}</div>}
                     </form>
                 </div>
             </div>
