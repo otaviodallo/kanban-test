@@ -1,33 +1,31 @@
+import { NextResponse } from 'next/server';
 import { db } from '../../../db/index';
-import { NextResponse } from "next/server";
 
-export async function POST(
-    req: Request
-) {
+export async function POST(req: Request) {
     try {
         const { title, listId, finishUntil } = (await req.json()) as {
             title: string;
-            listId: number,
-            finishUntil: Date
+            listId: number;
+            finishUntil: Date;
         };
         const task = await db.task.create({
             data: {
                 title,
                 listId,
-                finishUntil
-            }
-        })
+                finishUntil,
+            },
+        });
         return NextResponse.json({
             task: {
                 name: task.title,
                 listId: task.listId,
-                finishUntil: task.finishUntil
+                finishUntil: task.finishUntil,
             },
         });
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }
@@ -35,31 +33,31 @@ export async function POST(
     }
 }
 
-export async function PUT(
-    req: Request
-) {
+export async function PUT(req: Request) {
     try {
-        const { id, title, description, listId, finishUntil } = (await req.json()) as {
-            id: number;
-            title: string;
-            description: string;
-            listId: number;
-            finishUntil: Date
-        };
+        const { id, title, listId, finishUntil, completedAt } =
+            (await req.json()) as {
+                id: number;
+                title: string;
+                listId: number;
+                finishUntil: Date;
+                completedAt: Date;
+            };
         const task = await db.task.update({
             where: { id },
             data: {
                 title,
                 listId,
-                finishUntil
-            }
+                finishUntil,
+                completedAt,
+            },
         });
 
         if (!task) {
             return new NextResponse(
                 JSON.stringify({
-                    status: "error",
-                    message: "Task not found",
+                    status: 'error',
+                    message: 'Task not found',
                 }),
                 { status: 404 }
             );
@@ -69,13 +67,13 @@ export async function PUT(
             task: {
                 name: task.title,
                 listId: task.listId,
-                finish: task.finishUntil
+                finish: task.finishUntil,
             },
         });
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }
@@ -92,13 +90,13 @@ export async function GET(req: any) {
         }
         const parsedId = parseInt(id);
         const tasks = await db.task.findMany({
-            where: { listId: parsedId }
+            where: { listId: parsedId },
         });
         return NextResponse.json(tasks);
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }
@@ -113,14 +111,14 @@ export async function DELETE(req: any) {
         };
         const task = await db.task.delete({
             where: {
-                id: id
-            }
-        })
-        return NextResponse.json(task)
+                id: id,
+            },
+        });
+        return NextResponse.json(task);
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }

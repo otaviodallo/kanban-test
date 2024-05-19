@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
 import check from '../../public/aprovar.png';
 import entrar from '../../public/entrar.png';
 import flecha from '../../public/flecha (1).png';
+import raio from '../../public/raio-trovao.png';
 import styles from '../../src/styles/list.module.scss';
-import trovao from '../../public/raio-trovao.png';
-import { z } from 'zod';
 
 interface ModalConfirmationProps {
     onAddTask: (id: number) => void;
     setFetchLists: (fetchLists: () => void) => void;
+}
+
+interface CompletedTaskState {
+    [key: number]: Task[];
 }
 
 const TaskSchema = z.object({
@@ -17,7 +21,7 @@ const TaskSchema = z.object({
     title: z.string(),
     listId: z.number(),
     finishUntil: z.date().nullable(),
-    completedAt: z.date().nullable()
+    completedAt: z.date().nullable(),
 });
 
 const TaskArraySchema = z.array(TaskSchema);
@@ -37,105 +41,231 @@ interface List {
     tasks: Task[];
 }
 
-export default function List({ onAddTask, setFetchLists }: ModalConfirmationProps) {
+export default function List({
+    onAddTask,
+    setFetchLists,
+}: ModalConfirmationProps) {
     const [lists, setLists] = useState<List[]>([]);
-    const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
-    const [openCompletedTasks, setOpenCompletedTasks] = useState<{ [key: number]: boolean }>({});
+    const [completedTasksByList, setCompletedTasksByList] = useState<{
+        [key: number]: Task[];
+    }>({});
+    const [openCompletedTasks, setOpenCompletedTasks] = useState<{
+        [key: number]: boolean;
+    }>({});
 
     async function fetchLists() {
         try {
             const res = await fetch('/api/list');
             if (!res.ok) {
-                throw new Error("Failed to fetch lists");
+                throw new Error('Failed to fetch lists');
             }
             const data = await res.json();
             setLists(data);
         } catch (error) {
-            console.error("Failed to fetch lists", error);
+            console.error('Failed to fetch lists', error);
         }
     }
 
     useEffect(() => {
+        async function fetchLists() {
+            try {
+                const res = await fetch('/api/list');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch lists');
+                }
+                const data = await res.json();
+                setLists(data);
+
+                const completedTasks: CompletedTaskState = {};
+                data.forEach((list: List) => {
+                    const completedTasksInList = list.tasks.filter(
+                        (task: Task) => task.completedAt
+                    );
+                    completedTasks[list.id] = completedTasksInList;
+                });
+                setCompletedTasksByList(completedTasks);
+            } catch (error) {
+                console.error('Failed to fetch lists', error);
+            }
+        }
+
         fetchLists();
         setFetchLists(fetchLists);
     }, []);
 
     async function deleteTask(id: number) {
         try {
-            const res = await fetch("/api/task", {
-                method: "DELETE",
+            const res = await fetch('/api/task', {
+                method: 'DELETE',
                 body: JSON.stringify({ id }),
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
             });
             fetchLists();
             if (!res.ok) {
-                throw new Error("Failed to delete task");
+                throw new Error('Failed to delete task');
             }
         } catch (error) {
-            console.error("Failed to delete tasks", error);
+            console.error('Failed to delete tasks', error);
         }
     }
 
     async function deleteList(id: number) {
         try {
-            const res = await fetch("/api/list", {
-                method: "DELETE",
+            const res = await fetch('/api/list', {
+                method: 'DELETE',
                 body: JSON.stringify({ id }),
                 headers: {
-                    "Content-Type": "application/json",
-                }
+                    'Content-Type': 'application/json',
+                },
             });
             fetchLists();
             if (!res.ok) {
-                throw new Error("Failed to delete list");
+                throw new Error('Failed to delete list');
             }
         } catch (error) {
-            console.error("Failed to delete lists", error);
+            console.error('Failed to delete lists', error);
+        }
+    }
+
+    async function updateTask(task: Task) {
+        try {
+            const res = await fetch('/api/task', {
+                method: 'PUT',
+                body: JSON.stringify(task),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!res.ok) {
+                throw new Error('Failed to update task');
+            }
+            fetchLists();
+        } catch (error) {
+            console.error('Failed to update task', error);
+        }
+    }
+
+    async function updateList(list: List) {
+        try {
+            const res = await fetch('/api/list', {
+                method: 'PUT',
+                body: JSON.stringify(list),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            fetchLists();
+            if (!res.ok) {
+                throw new Error('Failed to update list');
+            }
+        } catch (error) {
+            console.error('Failed to update lists', error);
         }
     }
 
     const toggleCompletedTasks = (id: number) => {
-        setOpenCompletedTasks(prevState => ({
-            ...prevState,
-            [id]: !prevState[id]
-        }));
+        setOpenCompletedTasks((prevState) => {
+            // Verifique se a lista de tarefas completadas para este ID está aberta ou fechada
+            const isOpen = prevState[id] ?? false;
+
+            return {
+                ...prevState,
+                [id]: !isOpen, // Inverte o estado, independentemente de estar aberto ou fechado
+            };
+        });
     };
 
     const calculateDaysRemaining = (finishUntil?: string) => {
-        if (!finishUntil) return "Sem data especificada";
+        if (!finishUntil) return 'Sem data especificada';
         const today = new Date();
         const finishDate = new Date(finishUntil);
-        if (finishDate < today) return "Data de conclusão indefinida";
+        if (finishDate < today) return 'Data de conclusão indefinida';
         const differenceInTime = finishDate.getTime() - today.getTime();
-        const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+        const differenceInDays = Math.ceil(
+            differenceInTime / (1000 * 3600 * 24)
+        );
         return `${differenceInDays} dias restantes`;
     };
 
-    const handleTaskDoubleClick = async (listId: number, taskId: number) => {
+    const handleTaskDoubleClick = async (task: Task) => {
         const now = new Date().toISOString();
-        const updatedLists = lists.map(list => {
-            if (list.id === listId) {
-                const updatedTasks = list.tasks.map(task => {
-                    if (task.id === taskId) {
-                        task.completedAt = now;
-                        return task;
-                    }
-                    return task;
-                });
-                const completedTask = updatedTasks.find(task => task.id === taskId);
-                if (completedTask) {
-                    setCompletedTasks(prevCompletedTasks => [...prevCompletedTasks, completedTask]);
+
+        try {
+            const updatedTask = {
+                ...task,
+                completedAt: task.completedAt ? task.completedAt : now,
+            };
+
+            const updatedLists = lists.map((list) => {
+                if (list.id === task.listId) {
+                    const updatedTasks = list.tasks.map((t) => {
+                        if (t.id === task.id) {
+                            return updatedTask;
+                        }
+                        return t;
+                    });
+                    return {
+                        ...list,
+                        tasks: updatedTasks,
+                    };
                 }
-                return {
-                    ...list,
-                    tasks: updatedTasks.filter(task => task.id !== taskId)
-                };
-            }
-            return list;
-        });
-        setLists(updatedLists);
+                return list;
+            });
+
+            setLists(updatedLists);
+
+            const updatedCompletedTasks = { ...completedTasksByList };
+            const completedTasksInList =
+                updatedCompletedTasks[task.listId] || [];
+            updatedCompletedTasks[task.listId] = [
+                ...completedTasksInList,
+                updatedTask,
+            ];
+            setCompletedTasksByList(updatedCompletedTasks);
+
+            await updateTask(updatedTask);
+        } catch (error) {
+            console.error('Failed to update task', error);
+        }
+    };
+
+    const handleTaskUndoCompletion = async (task: Task) => {
+        try {
+            const updatedTask = {
+                ...task,
+                completedAt: null,
+            };
+
+            const updatedLists = lists.map((list) => {
+                if (list.id === task.listId) {
+                    const updatedTasks = list.tasks.map((t) => {
+                        if (t.id === task.id) {
+                            return updatedTask;
+                        }
+                        return t;
+                    });
+                    return {
+                        ...list,
+                        tasks: updatedTasks,
+                    };
+                }
+                return list;
+            });
+
+            setLists(updatedLists);
+
+            const updatedCompletedTasks = { ...completedTasksByList };
+            updatedCompletedTasks[task.listId] = updatedCompletedTasks[
+                task.listId
+            ].filter((t) => t.id !== task.id);
+            setCompletedTasksByList(updatedCompletedTasks);
+
+            await updateTask(updatedTask);
+        } catch (error) {
+            console.error('Failed to undo task completion', error);
+        }
     };
 
     return (
@@ -146,32 +276,72 @@ export default function List({ onAddTask, setFetchLists }: ModalConfirmationProp
                         <div className={styles.title}>
                             <div>
                                 <div>{list.title}</div>
-                                <div className={styles.listDescription}>{list.description}</div>
+                                <div className={styles.listDescription}>
+                                    {list.description}
+                                </div>
                             </div>
                             <div className={styles.titlePoints}>
-                                <a onClick={() => { deleteList(list.id) }}>excluir</a>
+                                <a
+                                    onClick={() => {
+                                        deleteList(list.id);
+                                    }}
+                                >
+                                    excluir
+                                </a>
                             </div>
                         </div>
                         {list.tasks && (
                             <div className={styles.tasks}>
-                                {list.tasks.map((task) => (
-                                    <div key={task.id} className={styles.task} onDoubleClick={() => handleTaskDoubleClick(list.id, task.id)}>
-                                        <div className={styles.taskMain}>
-                                            <div className={styles.taskCheck}>
-                                                <Image src={check} alt="check" />
-                                            </div>
-                                            <div className={styles.taskContent}>
-                                                <div className={styles.taskTitle}>
-                                                    {task.title}
+                                {list.tasks
+                                    .filter((task) => !task.completedAt)
+                                    .map((task) => (
+                                        <div
+                                            key={task.id}
+                                            className={styles.task}
+                                            onDoubleClick={() =>
+                                                handleTaskDoubleClick(task)
+                                            }
+                                        >
+                                            <div className={styles.taskMain}>
+                                                <div
+                                                    className={styles.taskCheck}
+                                                >
+                                                    <Image
+                                                        src={check}
+                                                        alt="check"
+                                                    />
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.taskContent
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.taskTitle
+                                                        }
+                                                    >
+                                                        {task.title}
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div className={styles.taskDelete}>
+                                                <p>
+                                                    {calculateDaysRemaining(
+                                                        task.finishUntil ??
+                                                            undefined
+                                                    )}
+                                                </p>
+                                                <a
+                                                    onClick={() => {
+                                                        deleteTask(task.id);
+                                                    }}
+                                                >
+                                                    X
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div className={styles.taskDelete}>
-                                            <p>{calculateDaysRemaining(task.finishUntil ?? undefined)}</p>
-                                            <a onClick={() => { deleteTask(task.id) }}>X</a>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
                             </div>
                         )}
                         <div className={styles.newTasks}>
@@ -190,42 +360,104 @@ export default function List({ onAddTask, setFetchLists }: ModalConfirmationProp
                             <div className={styles.completedText}>
                                 <div>Completed List</div>
                                 <div>
-                                    <a onClick={() => toggleCompletedTasks(list.id)}>
-                                        <Image
-                                            src={flecha}
-                                            alt="flecha"
-                                        />
+                                    <a
+                                        onClick={() =>
+                                            toggleCompletedTasks(list.id)
+                                        }
+                                    >
+                                        <Image src={flecha} alt="flecha" />
                                     </a>
                                 </div>
                             </div>
-                            {openCompletedTasks[list.id] && (
-                                <div className={styles.tasksCompletedMain}>
-                                    <div className={styles.tasksCompletedContent}>
-                                        {completedTasks.map(task => (
-                                            <div key={task.id} className={styles.task}>
-                                                <div className={styles.taskMain}>
-                                                    <div className={styles.taskCheck}>
-                                                        <Image src={check} alt="check" />
+                            {openCompletedTasks &&
+                                openCompletedTasks[list.id] && (
+                                    <div className={styles.tasksCompletedMain}>
+                                        <div className={styles.tasks}>
+                                            {(
+                                                completedTasksByList[list.id] ||
+                                                []
+                                            ).map((task) => (
+                                                <div
+                                                    key={task.id}
+                                                    className={styles.task}
+                                                    onDoubleClick={() =>
+                                                        handleTaskUndoCompletion(
+                                                            task
+                                                        )
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.taskMain
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.taskCheck
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={check}
+                                                                alt="check"
+                                                            />
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.taskContent
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.taskTitle
+                                                                }
+                                                            >
+                                                                {task.title}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className={styles.taskContent}>
-                                                        <div className={styles.taskTitle}>
-                                                            {task.title}
+                                                    <div
+                                                        className={
+                                                            styles.taskDelete
+                                                        }
+                                                    >
+                                                        <p
+                                                            className={
+                                                                styles.taskDone
+                                                            }
+                                                        >
+                                                            Done
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            {completedTasksByList[list.id]
+                                                ?.length === 0 && (
+                                                <div
+                                                    className={
+                                                        styles.tasksCompletedContentEmpty
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.tasksCompletedEmptyDiv
+                                                        }
+                                                    >
+                                                        <div>
+                                                            No tasks completed
+                                                            yet
+                                                        </div>
+                                                        <div>
+                                                            <Image
+                                                                src={raio}
+                                                                alt="raio"
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className={styles.taskDelete}>
-                                                    <p>Completed at: {task.completedAt}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                        {completedTasks.length === 0 && (
-                                            <div className={styles.tasksCompletedContentEmpty}>
-                                                No tasks completed yet
-                                            </div>
-                                        )}
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
                         </div>
                     </div>
                 </div>

@@ -157,7 +157,7 @@
 
 .taskDelete {
     margin-right: 20px;
-    margin-top: 15px;
+    margin-top: 22px;
     max-height: 10px;
     color: inherit;
 }
@@ -166,11 +166,12 @@
     font-size: 11px;
     margin-right: 7px;
     margin-top: 3px;
+    min-height: 20px;
 }
 
 .taskDelete div {
     font-size: 10px;
-    max-height: 20px;
+    min-height: 20px;
     margin-top: 3px;
     margin-right: 5px;
 }
@@ -185,4 +186,21 @@
 
 .listDescription {
     font-size: 11px;
+}
+
+.tasksCompletedContentEmpty {
+    align-items: center;
+    min-height: 200px;
+}
+
+.tasksCompletedEmptyDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 57px;
+}
+
+.taskDone {
+    color: green;
 }

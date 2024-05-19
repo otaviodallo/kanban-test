@@ -7,19 +7,19 @@ export async function POST(req: Request) {
             title: string;
             description: string;
         };
-        
+
         const newList = await db.list.create({
             data: {
                 title,
                 description,
             },
         });
-        
+
         return NextResponse.json(newList);
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }
@@ -34,7 +34,7 @@ export async function PUT(req: Request) {
             title: string;
             description: string | null;
         };
-        
+
         const updatedList = await db.list.update({
             where: {
                 id,
@@ -48,8 +48,8 @@ export async function PUT(req: Request) {
         if (!updatedList) {
             return new NextResponse(
                 JSON.stringify({
-                    status: "error",
-                    message: "List not found",
+                    status: 'error',
+                    message: 'List not found',
                 }),
                 { status: 404 }
             );
@@ -59,7 +59,7 @@ export async function PUT(req: Request) {
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }
@@ -71,14 +71,14 @@ export async function GET() {
     try {
         const lists = await db.list.findMany({
             include: {
-                tasks: true
-            }
+                tasks: true,
+            },
         });
         return NextResponse.json(lists);
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }
@@ -91,16 +91,16 @@ export async function DELETE(req: any) {
         const { id } = (await req.json()) as {
             id: number;
         };
-        await db.list.delete({
+        const entity = await db.list.delete({
             where: {
-                id: id
-            }
-        })
-        return id
+                id: id,
+            },
+        });
+        return NextResponse.json(entity);
     } catch (e: any) {
         return new NextResponse(
             JSON.stringify({
-                status: "error",
+                status: 'error',
                 message: e.message,
             }),
             { status: 500 }
